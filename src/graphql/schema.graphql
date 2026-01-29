@@ -1,0 +1,174 @@
+scalar DateTime
+
+type User {
+  id: ID!
+  name: String!
+  email: String
+  role: String!
+  isEmailVerified: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  products: [Product!]!
+  orders: [Order!]!
+}
+
+type Product {
+  id: ID!
+  name: String!
+  description: String!
+  price: Float!
+  quantityInStock: Int!
+  category: Category!
+  user: User!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Category {
+  id: ID!
+  name: String!
+  products: [Product!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Order {
+  id: ID!
+  date: DateTime!
+  totalPrice: Float!
+  customerName: String!
+  customerEmail: String!
+  user: User!
+  orderItems: [OrderItem!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type OrderItem {
+  id: ID!
+  quantity: Int!
+  unitPrice: Float!
+  product: Product!
+  order: Order!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input RegisterInput {
+  name: String!
+  email: String!
+  password: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input CreateUserInput {
+  name: String!
+  email: String!
+  password: String!
+  role: String
+}
+
+input UpdateUserInput {
+  name: String
+  email: String
+  role: String
+}
+
+input CreateProductInput {
+  name: String!
+  description: String!
+  price: Float!
+  quantityInStock: Int!
+  categoryId: ID!
+}
+
+input UpdateProductInput {
+  name: String
+  description: String
+  price: Float
+  quantityInStock: Int
+  categoryId: ID
+}
+
+input CreateCategoryInput {
+  name: String!
+}
+
+input UpdateCategoryInput {
+  name: String
+}
+
+input CreateOrderInput {
+  date: DateTime!
+  customerName: String!
+  customerEmail: String!
+}
+
+input UpdateOrderInput {
+  date: DateTime
+  customerName: String
+  customerEmail: String
+}
+
+input CreateOrderItemInput {
+  orderId: ID!
+  productId: ID!
+  quantity: Int!
+  unitPrice: Float!
+}
+
+input UpdateOrderItemInput {
+  quantity: Int
+  unitPrice: Float
+}
+
+type AuthPayload {
+  token: String!
+  user: User!
+}
+
+type Query {
+  me: User
+  users: [User!]!
+  user(id: ID!): User
+  products: [Product!]!
+  product(id: ID!): Product
+  productsByUser(userId: ID!): [Product!]!
+  categories: [Category!]!
+  category(id: ID!): Category
+  orders: [Order!]!
+  order(id: ID!): Order
+  orderItems: [OrderItem!]!
+  orderItem(id: ID!): OrderItem
+  orderItemsByOrder(orderId: ID!): [OrderItem!]!
+}
+
+type Mutation {
+  register(input: RegisterInput!): AuthPayload!
+  login(input: LoginInput!): AuthPayload!
+  logout: Boolean!
+
+  createUser(input: CreateUserInput!): User!
+  updateUser(id: ID!, input: UpdateUserInput!): User!
+  deleteUser(id: ID!): Boolean!
+
+  createProduct(input: CreateProductInput!): Product!
+  updateProduct(id: ID!, input: UpdateProductInput!): Product!
+  deleteProduct(id: ID!): Boolean!
+
+  createCategory(input: CreateCategoryInput!): Category!
+  updateCategory(id: ID!, input: UpdateCategoryInput!): Category!
+  deleteCategory(id: ID!): Boolean!
+
+  createOrder(input: CreateOrderInput!): Order!
+  updateOrder(id: ID!, input: UpdateOrderInput!): Order!
+  deleteOrder(id: ID!): Boolean!
+
+  createOrderItem(input: CreateOrderItemInput!): OrderItem!
+  updateOrderItem(id: ID!, input: UpdateOrderItemInput!): OrderItem!
+  deleteOrderItem(id: ID!): Boolean!
+}
